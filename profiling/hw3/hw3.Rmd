@@ -1,7 +1,7 @@
 ---
-title: "GWAS 1"
-author: "Jinliang Yang"
-date: "04-26-2022"
+title: "hw3"
+author: "Hongyu Jin"
+date: "05-03-2022"
 output: pdf_document
 ---
 
@@ -409,73 +409,4 @@ manhattan(x = res, chr = "chr", bp = "ps", p = "p_wald", snp = "rs", col = c("bl
 
 
 ---
-
-# rrBLUP package for GWAS
-
-### PLINK format
-
-```{r, eval=FALSE}
-# install.packages("BGLR")
-library("BGLR")
-ped <- read_ped("data/RiceDiversity_44K_Genotypes_PLINK/sativas413.ped") 
-```
-
-Recoding the data to `0,1,2`
-
-```{r, eval=FALSE}
-p=ped$p
-n=ped$n
-out=ped$x
-#Recode snp to 0,1,2 format using allele 1
-# 0 --> 0
-# 1 --> 1
-# 2 --> NA
-# 3 --> 2
-out[out==2]=NA
-out[out==3]=2
-Z <- matrix(out, nrow=p, ncol=n, byrow=TRUE)
-Z <- t(Z) 
-dim(Z) # # 413 x 36901
-```
-
----
-
-# rrBLUP package for GWAS
-
-### Read fam file
-
-```{r, eval=FALSE}
-# accession ID
-fam <- read.table("data/RiceDiversity_44K_Genotypes_PLINK/sativas413.fam", header = FALSE, stringsAsFactors = FALSE)  
-head(fam)
-rownames(Z) <- paste0("NSFTV_", fam$V2) # 413 x 36901
-```
-
-### SNP imputation
-
-```{r, eval=FALSE}
-for (j in 1:ncol(Z)){
-  Z[,j] <- ifelse(is.na(Z[,j]), mean(Z[,j], na.rm=TRUE), Z[,j])
-}
-```
-
----
-# rrBLUP package for GWAS
-
-```{r, eval=FALSE}
-# install.packages("rrBLUP")
-library(rrBLUP)
-map <- read.table("data/RiceDiversity_44K_Genotypes_PLINK/sativas413.map", header = FALSE, stringsAsFactors = FALSE)
-?GWAS
-mygeno <- data.frame(marker=map[,2], chrom=map[,1], pos=map[,4], t(Z-1), check.names = FALSE) # Z = \in{-1, 0, 1}
-
-pheno$NSFTVID<- paste0("NSFTV_", pheno$NSFTVID)
-mypheno <- data.frame(NSFTV_ID=pheno$NSFTVID, y=pheno$Flowering.time.at.Arkansas) 
-
-res2 <- GWAS(mypheno, mygeno, n.PC=3, min.MAF=0.05, P3D=TRUE, plot=FALSE)
-
-# Returns a data frame where the first three columns are the marker name, chromosome, and position, and subsequent columns are the marker scores (-log_{10}p) for the traits.
-manhattan(x = res2, chr = "chrom", bp = "pos", p = "y", snp = "marker", col = c("blue4", "orange3"), logp = FALSE)
-```
-
 
