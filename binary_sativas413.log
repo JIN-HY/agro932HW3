@@ -1,0 +1,18 @@
+PLINK v1.90b6.21 64-bit (19 Oct 2020)
+Options in effect:
+  --bfile binary_sativas413
+  --ld-window 100
+  --ld-window-kb 100
+  --ld-window-r2 0
+  --out binary_sativas413
+  --r2
+
+Hostname: bdl-010b2006
+Working directory: /media/schnablelab3/agro932HW3
+Start time: Tue May  3 22:16:49 2022
+
+Random number seed: 1651634209
+64178 MB RAM detected; reserving 32089 MB for main workspace.
+Error: Failed to open binary_sativas413.bed.
+
+End time: Tue May  3 22:16:49 2022
